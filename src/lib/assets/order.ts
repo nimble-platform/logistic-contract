@@ -17,6 +17,7 @@ import { HistoricState } from '../ledger-api/state';
 import { NotRequired } from '../utils/annotations';
 import { Asset } from './asset';
 import { Epc } from './epc';
+import { IOrderDetails } from "../config/orderDetails";
 
 @Object()
 export class Order extends Asset {
@@ -25,43 +26,22 @@ export class Order extends Asset {
     }
 
     @Property()
-    public readonly eventTimeZoneOffset: string;
-
-    @Property()
-    public readonly bizStep: string;
+    public _orderDetails: IOrderDetails;
 
     @Property()
     public readonly recordTime: number;
-
-    @Property()
-    public readonly readPoint: string;
-
-    @Property()
-    public readonly custodian: string;
-
-    @Property()
-    public readonly eventTime: number;
-
-    @Property()
-    public readonly bizLocation: string;
 
     @Property()
     public epcList: Epc[];
 
     constructor(
         id: string,
-        eventTimeZoneOffset: string, bizStep: string, recordTime: number, readPoint: string,
-        custodian: string, eventTime: number, bizLocation: string, epcList: Epc[]
+        orderDetails: IOrderDetails, recordTime: number, epcList: Epc[]
     ) {
         super(id, Order.name);
 
-        this.eventTimeZoneOffset = eventTimeZoneOffset;
-        this.bizStep = bizStep;
+        this._orderDetails = orderDetails;
         this.recordTime = recordTime;
-        this.readPoint = readPoint;
-        this.custodian = custodian;
-        this.eventTime = eventTime;
-        this.bizLocation = bizLocation;
         this.epcList = epcList;
     }
 
