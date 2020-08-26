@@ -13,33 +13,24 @@ limitations under the License.
 */
 
 import { Object, Property } from 'fabric-contract-api';
+import 'reflect-metadata';
+import { NotRequired } from '../utils/annotations';
+import { Asset } from './asset';
 
 @Object()
-export class IOrderDetails {
-    @Property()
-    public eventTimeZoneOffset: string;
+export class Epc extends Asset {
+    public static getClass() {
+        return Asset.generateClass(Epc.name);
+    }
 
     @Property()
-    public bizStep: string;
+    public readonly epc_code: string;
 
-    @Property()
-    public readPoint: string;
-
-    @Property()
-    public custodian: string;
-
-    @Property()
-    public eventTime: number;
-
-    @Property()
-    public bizLocation: string;
-
-    @Property()
-    public manufacturerId: string;
-
-    @Property()
-    public buyerId: string;
-
-    @Property()
-    public itemIds: string[];
+    constructor(
+        id: string,
+        epc_code: string,
+    ) {
+        super(id, Epc.name);
+        this.epc_code = epc_code;
+    }
 }

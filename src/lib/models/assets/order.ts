@@ -18,6 +18,8 @@ import { NotRequired } from '../utils/annotations';
 import { Asset } from './asset';
 import { Epc } from './epc';
 import { IOrderDetails } from "../config/orderDetails";
+import { Item } from './item';
+import { DeliveryLocation } from '../locations/deilveryLocation';
 
 @Object()
 export class Order extends Asset {
@@ -26,30 +28,36 @@ export class Order extends Asset {
     }
 
     @Property()
-    public _orderDetails: IOrderDetails;
+    public _order_details: IOrderDetails;
 
     @Property()
-    public readonly recordTime: number;
+    public readonly record_time: number;
 
     @Property()
-    public epcList: Epc[];
+    public epc_list: Epc[];
+
+    @Property()
+    public item: Item;
+
+    @Property()
+    public delivery_location: DeliveryLocation;
+
+    @Property()
+    public note: string[];
+
 
     constructor(
         id: string,
-        orderDetails: IOrderDetails, recordTime: number, epcList: Epc[]
+        orderDetails: IOrderDetails, recordTime: number, epcList: Epc[], item: Item, deliveryLocation: DeliveryLocation,
+        note: string[]
     ) {
         super(id, Order.name);
 
-        this._orderDetails = orderDetails;
-        this.recordTime = recordTime;
-        this.epcList = epcList;
-    }
-
-    public addEpcId(id: string, epc_code: string){
-        this.epcList.push(new Epc(id, epc_code));
-    }
-
-    public removeEpcId(epc_code: string){
-        this.epcList = this.epcList.filter(epc => epc.epc_code != epc_code);
+        this._order_details = orderDetails;
+        this.record_time = recordTime;
+        this.epc_list = epcList;
+        this.delivery_location = deliveryLocation;
+        this.item = item;
+        this.note = note;
     }
 }

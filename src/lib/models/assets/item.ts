@@ -11,27 +11,35 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-
 import { Object, Property } from 'fabric-contract-api';
 import 'reflect-metadata';
-import { HistoricState } from '../ledger-api/state';
 import { NotRequired } from '../utils/annotations';
 import { Asset } from './asset';
+import { Epc } from './epc';
 
 @Object()
-export class Epc extends Asset {
+export class Item extends Asset {
     public static getClass() {
-        return Asset.generateClass(Epc.name);
+        return Asset.generateClass(Item.name);
     }
 
     @Property()
-    public readonly epc_code: string;
+    public readonly manufacturersItemIdentification: string;
+
+    @Property()
+    public readonly itemName : string;
+
+    @Property()
+    public readonly manufacturerParty : string;
 
     constructor(
         id: string,
-        epc_code: string,
+        manufacturersItemIdentification: string, itemName: string, manufacturerParty: string
     ) {
-        super(id, Epc.name);
-        this.epc_code = epc_code;
+        super(id, Item.name);
+
+        this.itemName = itemName;
+        this.manufacturerParty = manufacturerParty;
+        this.manufacturerParty = manufacturerParty;
     }
 }
