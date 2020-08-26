@@ -14,10 +14,10 @@ limitations under the License.
 import { Object, Property } from 'fabric-contract-api';
 import 'reflect-metadata';
 import { HistoricState } from '../ledger-api/state';
-import { NotRequired } from '../utils/annotations';
+import { NotRequired } from '../../utils/annotations';
 import { Asset } from './asset';
 import { Epc } from './epc';
-import { IOrderDetails } from "../config/orderDetails";
+import { IOrderDetails, ILocationDetails } from "../config/index";
 import { Item } from './item';
 import { DeliveryLocation } from '../locations/deilveryLocation';
 
@@ -34,30 +34,32 @@ export class Order extends Asset {
     public readonly record_time: number;
 
     @Property()
-    public epc_list: Epc[];
+    public epc_list: string[];
 
     @Property()
-    public item: Item;
+    public manufacturers_item_identification: string;
 
     @Property()
-    public delivery_location: DeliveryLocation;
+    public delivery_location_identifier: ILocationDetails;
+
+    @Property()
+    public origin_location_identifier: ILocationDetails;
 
     @Property()
     public note: string[];
 
-
     constructor(
         id: string,
-        orderDetails: IOrderDetails, recordTime: number, epcList: Epc[], item: Item, deliveryLocation: DeliveryLocation,
-        note: string[]
+        orderDetails: IOrderDetails, recordTime: number, epcList: string[], manufacturersItemIdentification: string,
+        deliveryLocationIdentifier: ILocationDetails, originLocationIdentifier: ILocationDetails, note: string[]
     ) {
         super(id, Order.name);
-
         this._order_details = orderDetails;
         this.record_time = recordTime;
         this.epc_list = epcList;
-        this.delivery_location = deliveryLocation;
-        this.item = item;
+        this.delivery_location_identifier = deliveryLocationIdentifier;
+        this.manufacturers_item_identification = manufacturersItemIdentification;
+        this.origin_location_identifier = originLocationIdentifier;
         this.note = note;
     }
 }

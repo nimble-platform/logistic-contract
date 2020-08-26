@@ -13,7 +13,7 @@ limitations under the License.
 */
 
 import { Param, Returns, Transaction } from 'fabric-contract-api';
-import {  Order, Epc } from '../assets'; // tslint:disable-line:max-line-length
+import {  Order, Epc } from '../models/assets'; // tslint:disable-line:max-line-length
 import { NimbleLogisticContext } from '../utils/context';
 import { generateId } from '../utils/functions';
 import { BaseContract } from './base';

@@ -13,8 +13,8 @@ limitations under the License.
 */
 import { Object, Property } from 'fabric-contract-api';
 import 'reflect-metadata';
-import { HistoricState } from '../ledger-api/state';
-import { NotRequired } from '../utils/annotations';
+import { HistoricState } from '../../ledger-api/state';
+import { NotRequired } from '../..//utils/annotations';
 import { Location } from './location';
 
 @Object()
@@ -24,30 +24,35 @@ export class OriginLocation extends Location {
     }
 
     @Property()
-    public readonly cityName: string;
+    public readonly origin_location_identifier: string;
+
+    @Property()
+    public readonly city_name: string;
 
     @Property()
     public readonly region : string;
 
     @Property()
-    public readonly postalZone : string;
+    public readonly postal_zone : string;
 
     @Property()
-    public readonly buildingNumber : string;
+    public readonly building_number : string;
 
     @Property()
-    public readonly countryName : string;
+    public readonly country_name : string;
+
 
     constructor(
         id: string,
-        cityName: string, region: string, postalZone: string, buildingNumber: string, countryName: string
+        cityName: string, region: string, postalZone: string, buildingNumber: string, countryName: string,
+        OriginLocationIdentifier: string
     ) {
         super(id, OriginLocation.name);
-
-        this.cityName = cityName;
+        this.origin_location_identifier = OriginLocationIdentifier;
+        this.city_name = cityName;
         this.region = region;
-        this.postalZone = postalZone;
-        this.buildingNumber = buildingNumber;
-        this.countryName = countryName;
+        this.postal_zone = postalZone;
+        this.building_number = buildingNumber;
+        this.country_name = countryName;
     }
 }

@@ -25,8 +25,8 @@ export class Location extends State {
     @Property('id', 'string')
     private _id: string;
 
-    constructor(id: string, assetType: string) {
-        super(Location.generateClass(assetType), [id]);
+    constructor(id: string, locationType: string) {
+        super(Location.generateClass(locationType), [id]);
 
         this._id = id;
     }
