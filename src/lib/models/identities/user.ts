@@ -11,12 +11,11 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-import { Object, Property } from 'fabric-contract-api';
-import 'reflect-metadata';
-import { HistoricState } from '../../ledger-api/state';
+import { Object as ContractObject, Property } from 'fabric-contract-api';
 import { Identity } from './idenitiy';
+import { State } from '../../ledger-api/state';
 
-@Object()
+@ContractObject()
 export class User extends Identity {
     public static getClass() {
         return Identity.generateClass(User.name);
@@ -43,5 +42,18 @@ export class User extends Identity {
 
     public hasRole(role: string): boolean {
         return this.roles.includes(role);
+    }
+
+    public serialize(): Buffer {
+        const toSerialize = JSON.parse(State.serialize(this).toString());
+
+        Object.keys(this).forEach((key) => {
+            if (key.startsWith('_')) {
+                Object.defineProperty(toSerialize, key.slice(1), Object.getOwnPropertyDescriptor(toSerialize, key));
+                delete toSerialize[key];
+            }
+        });
+
+        return Buffer.from(State.serialize(toSerialize));
     }
 }
