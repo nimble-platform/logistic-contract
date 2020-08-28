@@ -13,11 +13,12 @@ limitations under the License.
 */
 
 import { Param, Returns, Transaction } from 'fabric-contract-api';
-import {  Order, Epc } from '../models/assets'; // tslint:disable-line:max-line-length
+import {  Order } from '../models/assets'; // tslint:disable-line:max-line-length
 import { NimbleLogisticContext } from '../utils/context';
 import { generateId } from '../utils/functions';
 import { BaseContract } from './base';
-import { IOrderDetails } from '../config/orderDetails';
+import { IOrderDetails } from '../models/config/orderDetails';
+import { Location } from '../models/locations';
 
 export class VehicleContract extends BaseContract {
     constructor() {
@@ -27,7 +28,8 @@ export class VehicleContract extends BaseContract {
     @Transaction()
     @Returns('Order')
     public async startLogisticProcess(
-        ctx: NimbleLogisticContext, ordererId: string, orderDetails: IOrderDetails, epcList: Epc[]
+        ctx: NimbleLogisticContext, ordererId: string, orderDetails: IOrderDetails, epcList: Epc[],
+        manufacturersItemIdentification: string, deliveryLocation: Location, originLocation: Location, note: string[]
     ): Promise<Order> {
         const numOrders = await ctx.orderList.count();
 
@@ -36,7 +38,11 @@ export class VehicleContract extends BaseContract {
         const order = new Order(
             id, orderDetails,
             (ctx.stub.getTxTimestamp().getSeconds() as any).toInt() * 1000,
-            epcList
+            epcList,
+            manufacturersItemIdentification,
+            deliveryLocation,
+            originLocation,
+            note
         );
 
         await ctx.orderList.add(order);
@@ -58,7 +64,7 @@ export class VehicleContract extends BaseContract {
     public async changeTheCustodian(ctx: NimbleLogisticContext, orderId: string, newOrganization: string): Promise<Order> {
         const order = await ctx.orderList.get(orderId);
 
-        order._orderDetails.custodian = newOrganization;
+        order._order_details.custodian = newOrganization;
         await ctx.orderList.update(order);
 
         ctx.setEvent('UPDATE_ORDER', order);

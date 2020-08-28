@@ -11,40 +11,41 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
+import { Object, Property } from 'fabric-contract-api';
+import 'reflect-metadata';
+import { HistoricState } from '../../ledger-api/state';
+import { NotRequired } from '../..//utils/annotations';
+import { ILocationDetails } from '../config';
 
-import { Object as ContractObject, Property } from 'fabric-contract-api';
-import { NetworkName } from '../../constants';
-import { State } from '../ledger-api/state';
+@Object()
+export class Location {
+    @Property()
+    public readonly location_identifier: string;
 
-@ContractObject()
-export class Location extends State {
-    public static generateClass(locationType: string): string {
-        return NetworkName + '.location.'  + locationType;
-    }
+    @Property()
+    public readonly city_name: string;
 
-    @Property('id', 'string')
-    private _id: string;
+    @Property()
+    public readonly region : string;
 
-    constructor(id: string, locationType: string) {
-        super(Location.generateClass(locationType), [id]);
+    @Property()
+    public readonly postal_zone : string;
 
-        this._id = id;
-    }
+    @Property()
+    public readonly building_number : string;
 
-    get id(): string {
-        return this._id;
-    }
+    @Property()
+    public readonly country_name : string;
 
-    public serialize(): Buffer {
-        const toSerialize = JSON.parse(State.serialize(this).toString());
-
-        Object.keys(toSerialize).forEach((key) => {
-            if (key.startsWith('_')) {
-                Object.defineProperty(toSerialize, key.slice(1), Object.getOwnPropertyDescriptor(toSerialize, key));
-                delete toSerialize[key];
-            }
-        });
-
-        return State.serialize(toSerialize);
+    constructor(
+        cityName: string, region: string, postalZone: string, buildingNumber: string, countryName: string,
+        locationIdentifier: string
+    ) {
+        this.location_identifier = locationIdentifier;
+        this.city_name = cityName;
+        this.region = region;
+        this.postal_zone = postalZone;
+        this.building_number = buildingNumber;
+        this.country_name = countryName;
     }
 }

@@ -14,14 +14,9 @@ limitations under the License.
 import { Object, Property } from 'fabric-contract-api';
 import 'reflect-metadata';
 import { NotRequired } from '../../utils/annotations';
-import { Asset } from './asset';
 
 @Object()
-export class Item extends Asset {
-    public static getClass() {
-        return Asset.generateClass(Item.name);
-    }
-
+export class Item {
     @Property()
     public readonly manufacturers_item_identification: string;
 
@@ -35,8 +30,6 @@ export class Item extends Asset {
         id: string,
         manufacturersItemIdentification: string, itemName: string, manufacturerParty: string
     ) {
-        super(id, Item.name);
-
         this.item_name = itemName;
         this.manufacturers_item_identification = manufacturerParty;
         this.manufacturer_party = manufacturerParty;

@@ -15,10 +15,9 @@ import { Object, Property } from 'fabric-contract-api';
 import 'reflect-metadata';
 import { HistoricState } from '../../ledger-api/state';
 import { NotRequired } from '../../utils/annotations';
-import { Asset } from './asset';
-import { IOrderDetails, ILocationDetails } from "../config/index";
-import { Item } from './item';
-import { DeliveryLocation } from '../locations/deilveryLocation';
+import { Asset, Item } from '../assets';
+import { IOrderDetails } from "../config/index";
+import { Location } from '../locations';
 
 @Object()
 export class Order extends Asset {
@@ -36,28 +35,28 @@ export class Order extends Asset {
     public epc_list: string[];
 
     @Property()
-    public manufacturers_item_identification: string;
+    public item_idetifier: Item;
 
     @Property()
-    public delivery_location_identifier: ILocationDetails;
+    public delivery_location_identifier: Location;
 
     @Property()
-    public origin_location_identifier: ILocationDetails;
+    public origin_location_identifier: Location;
 
     @Property()
     public note: string[];
 
     constructor(
         id: string,
-        orderDetails: IOrderDetails, recordTime: number, epcList: string[], manufacturersItemIdentification: string,
-        deliveryLocationIdentifier: ILocationDetails, originLocationIdentifier: ILocationDetails, note: string[]
+        orderDetails: IOrderDetails, recordTime: number, epcList: string[], itemIdetifier: Item,
+        deliveryLocationIdentifier: Location, originLocationIdentifier: Location, note: string[]
     ) {
         super(id, Order.name);
         this._order_details = orderDetails;
         this.record_time = recordTime;
         this.epc_list = epcList;
         this.delivery_location_identifier = deliveryLocationIdentifier;
-        this.manufacturers_item_identification = manufacturersItemIdentification;
+        this.item_idetifier = itemIdetifier;
         this.origin_location_identifier = originLocationIdentifier;
         this.note = note;
     }
