@@ -14,9 +14,8 @@ limitations under the License.
 import { Object, Property } from 'fabric-contract-api';
 import 'reflect-metadata';
 import { HistoricState } from '../../ledger-api/state';
-import { NotRequired } from '../../utils/annotations';
 import { Asset, Item } from '../assets';
-import { IOrderDetails } from "../config/index";
+import { IOrderDetails } from '../config/index';
 import { Location } from '../locations';
 
 @Object()
@@ -49,7 +48,7 @@ export class Order extends Asset {
     constructor(
         id: string,
         orderDetails: IOrderDetails, recordTime: number, epcList: string[], itemIdetifier: Item,
-        deliveryLocationIdentifier: Location, originLocationIdentifier: Location, note: string[]
+        deliveryLocationIdentifier: Location, originLocationIdentifier: Location, note: string[],
     ) {
         super(id, Order.name);
         this._order_details = orderDetails;

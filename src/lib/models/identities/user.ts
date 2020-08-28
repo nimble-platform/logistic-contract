@@ -14,7 +14,6 @@ limitations under the License.
 import { Object, Property } from 'fabric-contract-api';
 import 'reflect-metadata';
 import { HistoricState } from '../../ledger-api/state';
-import { NotRequired } from '../../utils/annotations';
 import { Identity } from './idenitiy';
 
 @Object()
@@ -26,7 +25,7 @@ export class User extends Identity {
     @Property()
     public user_identification: string;
 
-    @Property('roles', 'string[]')
+    @Property()
     public readonly roles: string[];
 
     @Property()
@@ -34,7 +33,7 @@ export class User extends Identity {
 
     constructor(
         id: string,
-        name: string, user_identification:string, roles: string[], organizationDepartment: string
+        name: string, user_identification: string, roles: string[], organizationDepartment: string,
     ) {
         super(id, name, User.name);
         this.user_identification = user_identification;

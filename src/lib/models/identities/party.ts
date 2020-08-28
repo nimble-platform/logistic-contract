@@ -14,7 +14,6 @@ limitations under the License.
 import { Object, Property } from 'fabric-contract-api';
 import 'reflect-metadata';
 import { HistoricState } from '../../ledger-api/state';
-import { NotRequired } from '../../utils/annotations';
 import { Identity } from './idenitiy';
 import { User } from './user';
 
@@ -35,7 +34,7 @@ export class Party extends Identity {
 
     constructor(
         id: string,
-        name: string, partyIdentification: string, enOrigin: string, person: User[]
+        name: string, partyIdentification: string, enOrigin: string, person: User[],
     ) {
         super(id, name, Party.name);
         this.party_identification = partyIdentification;

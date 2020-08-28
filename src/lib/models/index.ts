@@ -11,16 +11,7 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-
-import { NetworkName } from '../../constants';
-import { Asset } from '../models/assets/asset';
-import { IState } from '../ledger-api/state';
-import { StateList } from '../ledger-api/statelist';
-import { NimbleLogisticContext } from '../utils/context';
-
-export class AssetList<T extends Asset> extends StateList<T> {
-    constructor(ctx: NimbleLogisticContext, listName: string, validTypes: Array<IState<T>>) {
-        super(ctx, NetworkName + '.lists.assets.' + listName);
-        this.use(...validTypes);
-    }
-}
+export * from './assets/index';
+export * from './config//index';
+export * from './identities/index';
+export * from './locations/index';

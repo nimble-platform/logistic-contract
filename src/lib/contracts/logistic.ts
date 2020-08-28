@@ -29,7 +29,7 @@ export class LogisticContract extends BaseContract {
     @Returns('Order')
     public async startLogisticProcess(
         ctx: NimbleLogisticContext, ordererId: string, orderDetails: IOrderDetails, epcList: string[],
-        itemIdentifier: Item, deliveryLocation: Location, originLocation: Location, note: string[]
+        itemIdentifier: Item, deliveryLocation: Location, originLocation: Location, note: string[],
     ): Promise<Order> {
         const numOrders = await ctx.orderList.count();
 
@@ -42,7 +42,7 @@ export class LogisticContract extends BaseContract {
             itemIdentifier,
             deliveryLocation,
             originLocation,
-            note
+            note,
         );
 
         await ctx.orderList.add(order);
@@ -58,15 +58,13 @@ export class LogisticContract extends BaseContract {
         return await ctx.orderList.getAll();
     }
 
-
     @Transaction()
     @Returns('Order')
-    public async changeTheCustodian(ctx: NimbleLogisticContext, orderId: string, newOrganization: string): Promise<Order> {
+    public async changeTheCustodian(ctx: NimbleLogisticContext, orderId: string, newOrganization: string)
+    : Promise<Order> {
         const order = await ctx.orderList.get(orderId);
-
         order._order_details.custodian = newOrganization;
         await ctx.orderList.update(order);
-
         ctx.setEvent('UPDATE_ORDER', order);
         return order;
     }
@@ -83,10 +81,10 @@ export class LogisticContract extends BaseContract {
     @Returns('Order')
     public async deleteOrder(ctx: NimbleLogisticContext, orderId: string): Promise<Order> {
         const order = await ctx.orderList.get(orderId);
-        if(order != null){
-            ctx.orderList.delete(orderId);
-            ctx.setEvent('DELETE_ORDER', order);
-            return order;
+        if ( order !== null ) {
+          ctx.orderList.delete(orderId);
+          ctx.setEvent('DELETE_ORDER', order);
+          return order;
         }
     }
 
@@ -95,7 +93,7 @@ export class LogisticContract extends BaseContract {
     @Returns('boolean')
     public async orderExists(ctx: NimbleLogisticContext, id: string): Promise<boolean> {
         const order = await ctx.orderList.get(id);
-        return order != null ? true : false ;
+        return order !== null ? true : false ;
     }
 
 }

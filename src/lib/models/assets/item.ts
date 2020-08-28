@@ -13,7 +13,6 @@ limitations under the License.
 */
 import { Object, Property } from 'fabric-contract-api';
 import 'reflect-metadata';
-import { NotRequired } from '../../utils/annotations';
 
 @Object()
 export class Item {
@@ -21,14 +20,14 @@ export class Item {
     public readonly manufacturers_item_identification: string;
 
     @Property()
-    public readonly item_name : string;
+    public readonly item_name: string;
 
     @Property()
-    public readonly manufacturer_party : string;
+    public readonly manufacturer_party: string;
 
     constructor(
         id: string,
-        manufacturersItemIdentification: string, itemName: string, manufacturerParty: string
+        manufacturersItemIdentification: string, itemName: string, manufacturerParty: string,
     ) {
         this.item_name = itemName;
         this.manufacturers_item_identification = manufacturerParty;

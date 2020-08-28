@@ -14,8 +14,6 @@ limitations under the License.
 import { Object, Property } from 'fabric-contract-api';
 import 'reflect-metadata';
 import { HistoricState } from '../../ledger-api/state';
-import { NotRequired } from '../..//utils/annotations';
-import { ILocationDetails } from '../config';
 
 @Object()
 export class Location {
@@ -26,20 +24,20 @@ export class Location {
     public readonly city_name: string;
 
     @Property()
-    public readonly region : string;
+    public readonly region: string;
 
     @Property()
-    public readonly postal_zone : string;
+    public readonly postal_zone: string;
 
     @Property()
-    public readonly building_number : string;
+    public readonly building_number: string;
 
     @Property()
-    public readonly country_name : string;
+    public readonly country_name: string;
 
     constructor(
         cityName: string, region: string, postalZone: string, buildingNumber: string, countryName: string,
-        locationIdentifier: string
+        locationIdentifier: string,
     ) {
         this.location_identifier = locationIdentifier;
         this.city_name = cityName;

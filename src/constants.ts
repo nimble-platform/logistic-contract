@@ -14,4 +14,3 @@ limitations under the License.
 
 export const NetworkName = 'org.nimble.supplychain_network';
 export const NetworkNameUUID = '01b1625d-c51f-4ffb-8b8c-d206eec1207d';
-

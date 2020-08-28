@@ -13,7 +13,7 @@ limitations under the License.
 */
 
 import { Context } from 'fabric-contract-api';
-import { Order } from '../models/assets';
+import { Order } from '../models/assets/order';
 import { AssetList, PartyList, UserList } from '../lists';
 import { State } from '../ledger-api/state';
 import { Party } from '../models/identities/party';
