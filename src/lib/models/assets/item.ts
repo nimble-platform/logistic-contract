@@ -23,13 +23,13 @@ export class Item extends Asset {
     }
 
     @Property()
-    public readonly manufacturersItemIdentification: string;
+    public readonly manufacturers_item_identification: string;
 
     @Property()
-    public readonly itemName : string;
+    public readonly item_name : string;
 
     @Property()
-    public readonly manufacturerParty : string;
+    public readonly manufacturer_party : string;
 
     constructor(
         id: string,
@@ -37,8 +37,8 @@ export class Item extends Asset {
     ) {
         super(id, Item.name);
 
-        this.itemName = itemName;
-        this.manufacturerParty = manufacturerParty;
-        this.manufacturerParty = manufacturerParty;
+        this.item_name = itemName;
+        this.manufacturers_item_identification = manufacturerParty;
+        this.manufacturer_party = manufacturerParty;
     }
 }
