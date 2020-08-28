@@ -13,10 +13,9 @@ limitations under the License.
 */
 import { Object, Property } from 'fabric-contract-api';
 import 'reflect-metadata';
-import { HistoricState } from '../ledger-api/state';
+import { HistoricState } from '../../ledger-api/state';
 import { NotRequired } from '../../utils/annotations';
 import { Asset } from './asset';
-import { Epc } from './epc';
 import { IOrderDetails, ILocationDetails } from "../config/index";
 import { Item } from './item';
 import { DeliveryLocation } from '../locations/deilveryLocation';

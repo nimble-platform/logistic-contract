@@ -13,8 +13,8 @@ limitations under the License.
 */
 
 import { Object as ContractObject, Property } from 'fabric-contract-api';
-import { NetworkName } from '../../constants';
-import { State } from '../ledger-api/state';
+import { NetworkName } from '../../../constants';
+import { State } from '../../ledger-api/state';
 
 @ContractObject()
 export class Asset extends State {

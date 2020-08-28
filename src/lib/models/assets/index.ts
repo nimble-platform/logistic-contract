@@ -13,4 +13,3 @@ limitations under the License.
 */
 export * from './asset';
 export * from './order';
-export * from './epc';

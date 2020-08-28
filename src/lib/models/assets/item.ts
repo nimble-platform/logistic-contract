@@ -13,9 +13,8 @@ limitations under the License.
 */
 import { Object, Property } from 'fabric-contract-api';
 import 'reflect-metadata';
-import { NotRequired } from '../utils/annotations';
+import { NotRequired } from '../../utils/annotations';
 import { Asset } from './asset';
-import { Epc } from './epc';
 
 @Object()
 export class Item extends Asset {
