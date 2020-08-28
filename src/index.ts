@@ -13,8 +13,9 @@ limitations under the License.
 */
 
 import { JSONSerializer } from './serializer';
+import { LogisticContract } from './lib/contracts/logistic';
 
-export const contracts: any[] = [];
+export const contracts: any[] = [LogisticContract];
 export const serializers = {
     serializers: {
         customSerializer: JSONSerializer,
