@@ -13,23 +13,23 @@ limitations under the License.
 */
 
 import { Param, Returns, Transaction } from 'fabric-contract-api';
-import {  Order } from '../models/assets'; // tslint:disable-line:max-line-length
+import {  Order, Item } from '../models/assets'; // tslint:disable-line:max-line-length
 import { NimbleLogisticContext } from '../utils/context';
 import { generateId } from '../utils/functions';
 import { BaseContract } from './base';
 import { IOrderDetails } from '../models/config/orderDetails';
 import { Location } from '../models/locations';
 
-export class VehicleContract extends BaseContract {
+export class LogisticContract extends BaseContract {
     constructor() {
-        super('vehicles');
+        super('logistic');
     }
 
     @Transaction()
     @Returns('Order')
     public async startLogisticProcess(
-        ctx: NimbleLogisticContext, ordererId: string, orderDetails: IOrderDetails, epcList: Epc[],
-        manufacturersItemIdentification: string, deliveryLocation: Location, originLocation: Location, note: string[]
+        ctx: NimbleLogisticContext, ordererId: string, orderDetails: IOrderDetails, epcList: string[],
+        itemIdentifier: Item, deliveryLocation: Location, originLocation: Location, note: string[]
     ): Promise<Order> {
         const numOrders = await ctx.orderList.count();
 
@@ -39,7 +39,7 @@ export class VehicleContract extends BaseContract {
             id, orderDetails,
             (ctx.stub.getTxTimestamp().getSeconds() as any).toInt() * 1000,
             epcList,
-            manufacturersItemIdentification,
+            itemIdentifier,
             deliveryLocation,
             originLocation,
             note
