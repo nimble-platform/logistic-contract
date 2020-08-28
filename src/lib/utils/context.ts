@@ -13,17 +13,23 @@ limitations under the License.
 */
 
 import { Context } from 'fabric-contract-api';
-import { Order } from '../assets';
-import { AssetList } from '../lists';
+import { Order } from '../models/assets';
+import { AssetList, PartyList, UserList } from '../lists';
 import { State } from '../ledger-api/state';
+import { Party } from '../models/identities/party';
+import { User } from '../models/identities/user';
 
 export class NimbleLogisticContext extends Context {
 
     public readonly orderList: AssetList<Order>;
+    public readonly partyList: PartyList;
+    public readonly userList: UserList;
 
     constructor() {
         super();
         this.orderList = new AssetList(this, 'orders', [Order]);
+        this.partyList = new PartyList(this, 'party', [Party]);
+        this.userList = new UserList(this, 'user', [User]);
     }
 
     public setEvent(eventName: string, payload: State) {
