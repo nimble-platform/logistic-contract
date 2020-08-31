@@ -17,6 +17,12 @@ import 'reflect-metadata';
 @Object()
 export class Item {
     @Property()
+    public readonly id: string;
+
+    @Property()
+    public readonly item_identification: string;
+
+    @Property()
     public readonly manufacturers_item_identification: string;
 
     @Property()
@@ -26,9 +32,11 @@ export class Item {
     public readonly manufacturer_party: string;
 
     constructor(
-        id: string,
+        id: string, item_identification: string,
         manufacturersItemIdentification: string, itemName: string, manufacturerParty: string,
     ) {
+        this.id = id;
+        this.item_identification = item_identification;
         this.item_name = itemName;
         this.manufacturers_item_identification = manufacturerParty;
         this.manufacturer_party = manufacturerParty;

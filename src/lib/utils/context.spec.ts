@@ -43,7 +43,7 @@ describe ('#Context', () => {
 
     beforeEach(() => {
 
-        NimbleLogisticContext = requireVehicleManufactureNetContext();
+        NimbleLogisticContext = requireLogisticContext();
 
         sandbox = sinon.createSandbox();
         context = new NimbleLogisticContext();
@@ -105,7 +105,7 @@ function testSupportedClasses(list: StateList<any>, expectedValues: Array<IState
     listClasses.should.deep.equal(expectedValues);
 }
 
-function requireVehicleManufactureNetContext() {
+function requireLogisticContext() {
     return require('./context').NimbleLogisticContext;
 }
 
