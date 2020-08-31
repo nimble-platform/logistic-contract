@@ -41,5 +41,5 @@ export class IOrderDetails {
     public buyerId: string;
 
     @Property()
-    public itemIds: string[];
+    public itemId: string;
 }
