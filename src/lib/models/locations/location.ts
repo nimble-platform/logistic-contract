@@ -18,6 +18,9 @@ import { HistoricState } from '../../ledger-api/state';
 @Object()
 export class Location {
     @Property()
+    public readonly id: string;
+
+    @Property()
     public readonly location_identifier: string;
 
     @Property()
@@ -36,6 +39,7 @@ export class Location {
     public readonly country_name: string;
 
     constructor(
+        id: string,
         cityName: string, region: string, postalZone: string, buildingNumber: string, countryName: string,
         locationIdentifier: string,
     ) {
