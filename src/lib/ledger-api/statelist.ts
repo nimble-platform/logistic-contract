@@ -55,25 +55,18 @@ export class StateList<T extends State> {
 
     public async getHistory(key: string): Promise<Array<HistoricState<T>>> {
         const ledgerKey = this.ctx.stub.createCompositeKey(this.name, State.splitKey(key));
-        const keyHistory = await this.ctx.stub.getHistoryForKey(ledgerKey);
+        const keyHistory = this.ctx.stub.getHistoryForKey(ledgerKey);
 
         const history: Array<HistoricState<T>> = [];
 
-        let value = (await keyHistory.next()).value;
-
-        while (value) {
-            const state = State.deserialize((value.getValue() as any).toBuffer(), this.supportedClasses);
-
+        const results = [];
+        for await (const keyMod of keyHistory) {
+            const state = State.deserialize((keyMod as any), this.supportedClasses);
             const historicState: HistoricState<T> = new HistoricState(
-                (value.getTimestamp().getSeconds() as any).toInt(), value.getTxId(), state as T,
+                (keyMod.timestamp.seconds as any).toInt(), keyMod.txId, state as T,
             );
-
             history.push(historicState);
-
-            const next = await keyHistory.next();
-            value = next.value;
         }
-
         return history;
     }
 
@@ -133,19 +126,12 @@ export class StateList<T extends State> {
             $regex: `.*${this.name}.*`,
         };
 
-        const iterator = await this.ctx.stub.getQueryResult(JSON.stringify(query));
-
-        let value = (await iterator.next()).value;
-
+        const iterator =  this.ctx.stub.getQueryResult(JSON.stringify(query));
         const states: T[] = [];
-
-        while (value) {
-            const state = State.deserialize((value.getValue() as any).toBuffer(), this.supportedClasses) as T;
-
+        for await (const res of iterator) {
+            const state = State.deserialize((res.value as any), this.supportedClasses) as T;
             states.push(state);
 
-            const next = await iterator.next();
-            value = next.value;
         }
         return states;
     }
