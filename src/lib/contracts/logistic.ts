@@ -30,7 +30,7 @@ export class LogisticContract extends BaseContract {
     @Returns('Order')
     public async startLogisticProcess(
         ctx: NimbleLogisticContext, orderDetails: IOrderDetails, epcList: string[],
-        itemIdentifier: Item, deliveryLocation: Location, originLocation: Location, note: string[],
+        itemIdentifier: Item, deliveryLocation: Location, originLocation: Location, note: string[], custodian: string,
     ): Promise<Order> {
         const numOrders = await ctx.orderList.count();
 
@@ -44,6 +44,7 @@ export class LogisticContract extends BaseContract {
             deliveryLocation,
             originLocation,
             note,
+            custodian,
         );
 
         await ctx.orderList.add(order);
@@ -53,18 +54,12 @@ export class LogisticContract extends BaseContract {
         return order;
     }
 
-    @Transaction(false)
-    @Returns('Order[]')
-    public async getAllOrders(ctx: NimbleLogisticContext): Promise<Order[]> {
-        return await ctx.orderList.getAll();
-    }
-
     @Transaction()
     @Returns('Order')
     public async changeTheCustodian(ctx: NimbleLogisticContext, orderId: string, newOrganization: string)
     : Promise<Order> {
         const order = await ctx.orderList.get(orderId);
-        order._order_details.custodian = newOrganization;
+        order.custodian = newOrganization;
         await ctx.orderList.update(order);
         ctx.setEvent('UPDATE_ORDER', order);
         return order;

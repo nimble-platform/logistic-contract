@@ -58,6 +58,8 @@ describe ('#LogisticContract', () => {
 
     const knownepcId: string =  'TEST848777';
 
+    const knowncustodian: string =  'AKA_Logistics';
+
     before(() => {
         mockery.enable({
             warnOnReplace: false,
@@ -125,14 +127,61 @@ describe ('#LogisticContract', () => {
 
             const expectedOrder = new Order(
                 'some id', order, knownrecordTime, [knownepcId], item, deliveryLocation,
-                originLocation, ['handle with care'],
+                originLocation, ['handle with care'], knowncustodian,
             );
 
             (await contract.startLogisticProcess(
-                ctx as any, order, [knownepcId], item, deliveryLocation, originLocation, ['handle with care'],
+                ctx as any, order, [knownepcId], item, deliveryLocation, originLocation,
+                 ['handle with care'], knowncustodian,
             )).should.deep.equal(expectedOrder);
             orderList.add.should.have.been.calledOnceWithExactly(expectedOrder);
             ctx.setEvent.should.have.been.calledOnceWithExactly('PLACE_ORDER', expectedOrder);
+        });
+    });
+
+    describe ('getOrder', () => {
+        it ('should return when the order exists for the given order id', async () => {
+            const fakeOrder = sinon.createStubInstance(Order);
+
+            orderList.get.withArgs('some order id').resolves(fakeOrder);
+
+            (await contract.getOrder(ctx as any, 'some order id')).should.deep.equal(
+                fakeOrder,
+            );
+        });
+
+        it ('should error when the order not exits for the given order id', async () => {
+            const fakeOrder = sinon.createStubInstance(Order);
+
+            (typeof await contract.getOrder(ctx as any, 'some order id')).should.be.equal('undefined');
+        });
+    });
+
+    describe ('changeTheCustodian', () => {
+        it ('should update the order', async () => {
+            const fakeOrder = sinon.createStubInstance(Order);
+            fakeOrder.custodian = 'exampleorg';
+            const fakeSetter = sinon.stub();
+
+            orderList.get.withArgs('some order id').resolves(fakeOrder);
+
+            (await contract.changeTheCustodian(ctx as any, 'some order id', 'exampleorg'))
+            .custodian.should.deep.equal('exampleorg');
+
+            ctx.orderList.update.should.have.been.calledOnceWithExactly(fakeOrder);
+        });
+    });
+
+    describe ('deleteOrder', () => {
+        it ('should delete the order', async () => {
+            const fakeOrder = sinon.createStubInstance(Order);
+
+            orderList.get.withArgs('some order id').resolves(fakeOrder);
+
+            (await contract.deleteOrder(ctx as any, 'some order id')).should.deep.equal(
+                fakeOrder,
+            );
+            ctx.orderList.delete.should.have.been.calledOnceWithExactly('some order id');
         });
     });
 });
