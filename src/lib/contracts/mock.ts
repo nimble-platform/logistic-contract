@@ -43,7 +43,6 @@ export const order  = {
     bizLocation: 'urn:epc:id:sgln:bizLocation.PodComp.2',
     bizStep: 'urn:epcglobal:cbv:bizstep:other',
     buyerId: '6785',
-    custodian: 'AKA_Logistics',
     eventTime: knownrecordTime,
     eventTimeZoneOffset: '-06:00',
     itemId: knownItemHjid,

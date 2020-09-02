@@ -45,10 +45,14 @@ export class Order extends Asset {
     @Property()
     public note: string[];
 
+    @Property()
+    public custodian: string;
+
     constructor(
         id: string,
         orderDetails: IOrderDetails, recordTime: number, epcList: string[], itemIdetifier: Item,
         deliveryLocationIdentifier: Location, originLocationIdentifier: Location, note: string[],
+        custodian: string,
     ) {
         super(id, Order.name);
         this._order_details = orderDetails;
@@ -58,5 +62,6 @@ export class Order extends Asset {
         this.item_idetifier = itemIdetifier;
         this.origin_location_identifier = originLocationIdentifier;
         this.note = note;
+        this.custodian = custodian;
     }
 }

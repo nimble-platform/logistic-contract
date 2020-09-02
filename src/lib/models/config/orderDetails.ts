@@ -26,9 +26,6 @@ export class IOrderDetails {
     public readPoint: string;
 
     @Property()
-    public custodian: string;
-
-    @Property()
     public eventTime: number;
 
     @Property()
