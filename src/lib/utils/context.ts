@@ -14,7 +14,9 @@ limitations under the License.
 
 import { Context } from 'fabric-contract-api';
 import { Order } from '../models/assets/order';
-import { AssetList, PartyList, UserList } from '../lists';
+import { AssetList } from '../lists/assetlist';
+import { PartyList } from '../lists/partylist';
+import { UserList } from '../lists/userlist';
 import { State } from '../ledger-api/state';
 import { Party } from '../models/identities/party';
 import { User } from '../models/identities/user';
@@ -34,8 +36,8 @@ export class NimbleLogisticContext extends Context {
 
     public setEvent(eventName: string, payload: State) {
         const buffer = payload.serialize();
-        const json = JSON.parse(buffer.toString('utf8'));
-        json.timestamp = (this.stub.getTxTimestamp().getSeconds() as any).toInt() * 1000;
+        const json = JSON.parse(buffer.toString());
+        json.timestamp = (this.stub.getTxTimestamp().seconds as any).toInt() * 1000;
         this.stub.setEvent(eventName, Buffer.from(JSON.stringify(json)));
     }
 }

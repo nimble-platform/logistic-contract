@@ -75,12 +75,10 @@ describe ('#Context', () => {
 
             context.stub = sinon.createStubInstance(ChaincodeStub);
             (context.stub as sinon.SinonStubbedInstance<ChaincodeStub>).getTxTimestamp.returns({
-                getSeconds: () => {
-                    return {
-                        toInt: () => {
-                            return 1;
-                        },
-                    };
+                seconds: {
+                    toInt: () => {
+                        return 1;
+                    },
                 },
             });
 
