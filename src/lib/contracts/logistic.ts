@@ -19,7 +19,7 @@ import { NimbleLogisticContext } from '../utils/context';
 import { generateId } from '../utils/functions';
 import { BaseContract } from './base';
 import { IOrderDetails } from '../models/config/orderDetails';
-import { Location } from '../models/locations';
+import { Location } from '../models/locations/location';
 
 export class LogisticContract extends BaseContract {
     constructor() {

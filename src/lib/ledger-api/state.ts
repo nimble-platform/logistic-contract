@@ -26,11 +26,11 @@ export interface IState<T> {
 @ContractObject()
 export class State {
 
-    public static serialize(object: object): Buffer {
+    public static serialize(object: object): Uint8Array {
         return Buffer.from(JSON.stringify(object));
     }
 
-    public static deserialize(data: Buffer, supportedClasses: Map<string, IState<State>>): State {
+    public static deserialize(data: Uint8Array, supportedClasses: Map<string, IState<State>>): State {
         const json = JSON.parse(data.toString());
         const objClass = supportedClasses.get(json.class);
         if (!objClass) {
@@ -110,7 +110,7 @@ export class State {
         return State.splitKey(this.key);
     }
 
-    public serialize(): Buffer {
+    public serialize(): Uint8Array {
         return State.serialize(this);
     }
 }
