@@ -35,7 +35,7 @@ export class Asset extends State {
         return this._id;
     }
 
-    public serialize(): Buffer {
+    public serialize(): Uint8Array {
         const toSerialize = JSON.parse(State.serialize(this).toString());
 
         Object.keys(toSerialize).forEach((key) => {

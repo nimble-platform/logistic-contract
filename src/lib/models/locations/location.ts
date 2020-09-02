@@ -13,7 +13,6 @@ limitations under the License.
 */
 import { Object, Property } from 'fabric-contract-api';
 import 'reflect-metadata';
-import { HistoricState } from '../../ledger-api/state';
 
 @Object()
 export class Location {

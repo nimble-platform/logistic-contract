@@ -14,9 +14,10 @@ limitations under the License.
 import { Object, Property } from 'fabric-contract-api';
 import 'reflect-metadata';
 import { HistoricState } from '../../ledger-api/state';
-import { Asset, Item } from '../assets';
-import { IOrderDetails } from '../config/index';
-import { Location } from '../locations';
+import { Asset } from '../assets/asset';
+import { Item } from '../assets/item';
+import { IOrderDetails } from '../config/orderDetails';
+import { Location } from '../locations/location';
 
 @Object()
 export class Order extends Asset {
@@ -30,7 +31,7 @@ export class Order extends Asset {
     @Property()
     public readonly record_time: number;
 
-    @Property()
+    @Property('epc_list', 'string[]')
     public epc_list: string[];
 
     @Property()
@@ -42,7 +43,7 @@ export class Order extends Asset {
     @Property()
     public origin_location_identifier: Location;
 
-    @Property()
+    @Property('note', 'string[]')
     public note: string[];
 
     @Property()

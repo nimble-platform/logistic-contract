@@ -24,7 +24,7 @@ export class User extends Identity {
     @Property()
     public user_identification: string;
 
-    @Property()
+    @Property('roles', 'string[]')
     public readonly roles: string[];
 
     @Property()

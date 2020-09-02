@@ -30,7 +30,7 @@ export class Party extends Identity {
     @Property()
     public readonly en_origin: string;
 
-    @Property()
+    @Property('person', 'User[]')
     public readonly person: User[];
 
     constructor(
