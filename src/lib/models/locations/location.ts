@@ -39,14 +39,14 @@ export class Location {
 
     constructor(
         id: string,
-        cityName: string, region: string, postalZone: string, buildingNumber: string, countryName: string,
-        locationIdentifier: string,
+        city_name: string, region: string, postal_zone: string, building_number: string, country_name: string,
+        location_identifier: string,
     ) {
-        this.location_identifier = locationIdentifier;
-        this.city_name = cityName;
+        this.location_identifier = location_identifier;
+        this.city_name = city_name;
         this.region = region;
-        this.postal_zone = postalZone;
-        this.building_number = buildingNumber;
-        this.country_name = countryName;
+        this.postal_zone = postal_zone;
+        this.building_number = building_number;
+        this.country_name = country_name;
     }
 }

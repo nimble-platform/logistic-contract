@@ -26,7 +26,7 @@ export class Order extends Asset {
     }
 
     @Property()
-    public _order_details: IOrderDetails;
+    public order_details: IOrderDetails;
 
     @Property()
     public readonly record_time: number;
@@ -51,17 +51,17 @@ export class Order extends Asset {
 
     constructor(
         id: string,
-        orderDetails: IOrderDetails, recordTime: number, epcList: string[], itemIdetifier: Item,
-        deliveryLocationIdentifier: Location, originLocationIdentifier: Location, note: string[],
+        order_details: IOrderDetails, record_time: number, epc_list: string[], item_idetifier: Item,
+        delivery_location_identifier: Location, origin_location_identifier: Location, note: string[],
         custodian: string,
     ) {
         super(id, Order.name);
-        this._order_details = orderDetails;
-        this.record_time = recordTime;
-        this.epc_list = epcList;
-        this.delivery_location_identifier = deliveryLocationIdentifier;
-        this.item_idetifier = itemIdetifier;
-        this.origin_location_identifier = originLocationIdentifier;
+        this.order_details = order_details;
+        this.record_time = record_time;
+        this.epc_list = epc_list;
+        this.delivery_location_identifier = delivery_location_identifier;
+        this.item_idetifier = item_idetifier;
+        this.origin_location_identifier = origin_location_identifier;
         this.note = note;
         this.custodian = custodian;
     }

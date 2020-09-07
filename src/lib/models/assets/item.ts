@@ -33,12 +33,12 @@ export class Item {
 
     constructor(
         id: string, item_identification: string,
-        manufacturersItemIdentification: string, itemName: string, manufacturerParty: string,
+        manufacturers_item_identification: string, item_name: string, manufacturer_party: string,
     ) {
         this.id = id;
         this.item_identification = item_identification;
-        this.item_name = itemName;
-        this.manufacturers_item_identification = manufacturerParty;
-        this.manufacturer_party = manufacturerParty;
+        this.item_name = item_name;
+        this.manufacturers_item_identification = manufacturers_item_identification;
+        this.manufacturer_party = manufacturer_party;
     }
 }
