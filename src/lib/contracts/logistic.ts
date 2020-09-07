@@ -20,10 +20,47 @@ import { generateId } from '../utils/functions';
 import { BaseContract } from './base';
 import { IOrderDetails } from '../models/config/orderDetails';
 import { Location } from '../models/locations/location';
+import { order, deliveryLocation, originLocation } from './mock';
 
 export class LogisticContract extends BaseContract {
     constructor() {
         super('logistic');
+    }
+
+    @Transaction()
+    @Returns('Order')
+    public async InitLedger(ctx: NimbleLogisticContext): Promise<Order> {
+        const knownMockItemId: string = 'f28756ce-1ac8-4eac-a3d8-82199f283908';
+
+        const knownManufacturerId: string = '5e9ea4f7-5ad3-4bf1-b993-79cdd6d0e615';
+
+        const knownItemHjid: string = '567218';
+
+        const knownManufacturerPartyId: string = '43471';
+
+        const knownProductName: string = 'aka_new_product';
+
+        const knownrecordTime: number = 1522809211116;
+
+        const knownepcId: string =  'TEST848777';
+
+        const knowncustodian: string =  'AKA_Logistics';
+
+        const item = new Item(
+            knownMockItemId,
+            knownItemHjid,
+            knownManufacturerId,
+            knownProductName,
+            knownManufacturerPartyId,
+        );
+
+        const expectedOrder = new Order(
+            'some id', order, knownrecordTime, [knownepcId], item, deliveryLocation,
+            originLocation, ['handle with care'], knowncustodian,
+        );
+        await ctx.orderList.add(expectedOrder);
+        ctx.setEvent('PLACE_ORDER', expectedOrder);
+        return expectedOrder;
     }
 
     @Transaction()
