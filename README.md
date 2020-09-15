@@ -5,3 +5,5 @@ This is a scafoolded templated for Hyperldger fabric by using the yemon template
 # Development Reference
 https://github.com/IBM-Blockchain/vehicle-manufacture
 
+# Scaffolded with 
+https://github.com/IBM-Blockchain/generator-fabric
