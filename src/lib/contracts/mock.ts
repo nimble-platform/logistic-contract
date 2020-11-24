@@ -1,5 +1,8 @@
 
 import { Location } from '../models/locations/location';
+import { IOrderDetails } from '../models/assets/orderDetails';
+import {Item} from '../models/assets/item';
+import {Order} from '../models/assets/order';
 
 const knownOriginLocationId: string = '2474a477-81e5-49cc-98d2-9f24739b3a76';
 
@@ -15,11 +18,13 @@ const knownManufacturerPartyId: string = '43471';
 
 const knownProductName: string = 'aka_new_product';
 
-const knownrecordTime: number = 1522809211116;
+const knownRecordTime: number = 1522809211116;
 
-const knownepcId: string =  'TEST848777';
+const knownEpcId: string =  'TEST848777';
 
-export const originLocation = new Location(
+const knownCustodian: string =  'AKA_Logistics';
+
+const originLocation: Location = new Location(
     knownOriginLocationId,
     'Negambo',
     'Colombo',
@@ -29,7 +34,7 @@ export const originLocation = new Location(
     '345',
 );
 
-export const deliveryLocation = new Location(
+const deliveryLocation: Location = new Location(
     knownDeliveryLocationId,
     'Nugegoda',
     'Colombo',
@@ -39,13 +44,27 @@ export const deliveryLocation = new Location(
     '678',
 );
 
-export const order  = {
-    bizLocation: 'urn:epc:id:sgln:bizLocation.PodComp.2',
-    bizStep: 'urn:epcglobal:cbv:bizstep:other',
-    buyerId: '6785',
-    eventTime: knownrecordTime,
-    eventTimeZoneOffset: '-06:00',
-    itemId: knownItemHjid,
-    manufacturerId: knownManufacturerPartyId ,
-    readPoint: 'urn:epc:id:sgln:readPoint.PodComp.1',
-};
+const item: Item = new Item(
+    knownMockItemId,
+    knownItemHjid,
+    knownManufacturerId,
+    knownProductName,
+    knownManufacturerPartyId,
+);
+
+const orderDetails: IOrderDetails[]  = [
+ new IOrderDetails('-06:00',
+     'urn:epcglobal:cbv:bizstep:other',
+     'urn:epc:id:sgln:bizLocation.PodComp.2',
+     knownRecordTime,
+     'urn:epc:id:sgln:readPoint.PodComp.1',
+     '6785',
+     knownManufacturerPartyId,
+     knownItemHjid,
+     'AKA Logistics'),
+];
+
+export const mockOrder: Order = new Order(
+    'some id4', orderDetails, knownRecordTime, [knownEpcId], item, deliveryLocation,
+    originLocation, ['handle with care'], knownCustodian,
+);
