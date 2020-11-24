@@ -13,56 +13,97 @@ limitations under the License.
 */
 import { Object, Property } from 'fabric-contract-api';
 import 'reflect-metadata';
+import './orderDetails';
 import { HistoricState } from '../../ledger-api/state';
 import { Asset } from '../assets/asset';
 import { Item } from '../assets/item';
-import { IOrderDetails } from '../config/orderDetails';
+import { IOrderDetails } from '../assets/orderDetails';
 import { Location } from '../locations/location';
 
 @Object()
 export class Order extends Asset {
+    public static parseJsonObjectToOrderType(id:string, logisticProcess:any): Order{
+        return new Order(
+            id, [IOrderDetails.parseJsonString(logisticProcess.orderDetails)],
+            logisticProcess.eventTime,
+            logisticProcess.epcList,
+            Item.parseJsonStringToItemType(logisticProcess.itemIdentifier),
+            Location.parseJsonStringToLocationType(logisticProcess.deliveryLocation),
+            Location.parseJsonStringToLocationType(logisticProcess.originLocation),
+            logisticProcess.note,
+            logisticProcess.custodian,
+        );
+    }
     public static getClass() {
         return Asset.generateClass(Order.name);
     }
 
-    @Property()
-    public order_details: IOrderDetails;
+    @Property('_order_details', 'IOrderDetails[]')
+    private _order_details: IOrderDetails[];
 
     @Property()
     public readonly record_time: number;
 
-    @Property('epc_list', 'string[]')
-    public epc_list: string[];
+    @Property('_epc_list', 'string[]')
+    private _epc_list: string[];
 
     @Property()
-    public item_idetifier: Item;
+    private _item_idetifier: Item;
 
     @Property()
-    public delivery_location_identifier: Location;
+    private _delivery_location_identifier: Location;
 
     @Property()
-    public origin_location_identifier: Location;
+    private _origin_location_identifier: Location;
 
-    @Property('note', 'string[]')
-    public note: string[];
+    @Property('_note', 'string[]')
+    private _note: string[];
 
     @Property()
-    public custodian: string;
+    private _custodian: string;
 
     constructor(
         id: string,
-        order_details: IOrderDetails, record_time: number, epc_list: string[], item_idetifier: Item,
+        order_details: IOrderDetails[], record_time: number, epc_list: string[], item_idetifier: Item,
         delivery_location_identifier: Location, origin_location_identifier: Location, note: string[],
         custodian: string,
     ) {
         super(id, Order.name);
-        this.order_details = order_details;
+        this._order_details = order_details;
         this.record_time = record_time;
-        this.epc_list = epc_list;
-        this.delivery_location_identifier = delivery_location_identifier;
-        this.item_idetifier = item_idetifier;
-        this.origin_location_identifier = origin_location_identifier;
-        this.note = note;
-        this.custodian = custodian;
+        this._epc_list = epc_list;
+        this._delivery_location_identifier = delivery_location_identifier;
+        this._item_idetifier = item_idetifier;
+        this._origin_location_identifier = origin_location_identifier;
+        this._note = note;
+        this._custodian = custodian;
     }
+
+    get order_details(): IOrderDetails[] {return this._order_details;}
+
+    set order_details(value: IOrderDetails[]) {this._order_details = value;}
+
+    get epc_list(): string[] {return this._epc_list;}
+
+    set epc_list(value: string[]) {this._epc_list = value;}
+
+    get item_idetifier(): Item {return this._item_idetifier;}
+
+    set item_idetifier(value: Item) {this._item_idetifier = value;}
+
+    get delivery_location_identifier(): Location {return this._delivery_location_identifier;}
+
+    set delivery_location_identifier(value: Location) {this._delivery_location_identifier = value;}
+
+    get origin_location_identifier(): Location {return this._origin_location_identifier;}
+
+    set origin_location_identifier(value: Location) {this._origin_location_identifier = value;}
+
+    get note(): string[] {return this._note;}
+
+    set note(value: string[]) {this._note = value;}
+
+    get custodian(): string {return this._custodian;}
+
+    set custodian(value: string) {this._custodian = value;}
 }

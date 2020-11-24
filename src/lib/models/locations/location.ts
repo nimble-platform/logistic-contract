@@ -13,9 +13,23 @@ limitations under the License.
 */
 import { Object, Property } from 'fabric-contract-api';
 import 'reflect-metadata';
+import {pick} from '../../utils/functions';
 
 @Object()
 export class Location {
+
+    public static parseJsonStringToLocationType(jsonString: string): Location {
+        return pick<Location>(JSON.parse(jsonString), {
+            id: String,
+            city_name: String,
+            region: String,
+            postal_zone: String,
+            building_number: String,
+            country_name: String,
+            location_identifier: String,
+        });
+    }
+
     @Property()
     public readonly id: string;
 
