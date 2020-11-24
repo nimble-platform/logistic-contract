@@ -3,6 +3,7 @@ import { Location } from '../models/locations/location';
 import { IOrderDetails } from '../models/assets/orderDetails';
 import {Item} from '../models/assets/item';
 import {Order} from '../models/assets/order';
+import {User} from '../models/identities/user';
 
 const knownOriginLocationId: string = '2474a477-81e5-49cc-98d2-9f24739b3a76';
 
@@ -67,4 +68,9 @@ const orderDetails: IOrderDetails[]  = [
 export const mockOrder: Order = new Order(
     'some id4', orderDetails, knownRecordTime, [knownEpcId], item, deliveryLocation,
     originLocation, ['handle with care'], knownCustodian,
+);
+
+export const  mockUser: User = new User(
+    '1234', 'perera Ayesh', 'nimble-id', ['Admin', 'Nimble-User'],
+    'nimble-party-id', 'Ayesh logistics', 'akayeshmantha@gmail.com', 'nimble',
 );

@@ -25,22 +25,11 @@ export class Party extends Identity {
     }
 
     @Property()
-    public party_identification: string;
+    public party_hjid: string;
 
-    @Property()
-    public readonly en_origin: string;
-
-    @Property('person', 'User[]')
-    public readonly person: User[];
-
-    constructor(
-        id: string,
-        name: string, partyIdentification: string, enOrigin: string, person: User[],
-    ) {
-        super(id, name, Party.name);
-        this.party_identification = partyIdentification;
-        this.en_origin = enOrigin;
-        this.person = person;
+    constructor(id: string, name: string, idenitityType: string, party_hjid: string) {
+        super(id, name, idenitityType);
+        this.party_hjid = party_hjid;
     }
 
     public serialize(): Buffer {

@@ -14,30 +14,53 @@ limitations under the License.
 import { Object as ContractObject, Property } from 'fabric-contract-api';
 import { Identity } from './idenitiy';
 import { State } from '../../ledger-api/state';
+import {Party} from './party';
+import {IOrderDetails} from '../assets/orderDetails';
+import {Item} from '../assets/item';
+import {Location} from '../locations/location';
 
 @ContractObject()
 export class User extends Identity {
+
+    public static parseJsonObjectToUserType(id:string, userDetails:any): User{
+        return new User(
+            id, userDetails.name, userDetails.user_id,
+            userDetails.roles, userDetails.party_hjid,
+            userDetails.party_name, userDetails.email, userDetails.peer_organization,
+        );
+    }
+
     public static getClass() {
         return Identity.generateClass(User.name);
     }
 
     @Property()
-    public user_identification: string;
+    public user_id: string;
 
     @Property('roles', 'string[]')
-    public readonly roles: string[];
+    public roles: string[];
 
     @Property()
-    public readonly organization_department: string;
+    public party_hjid: string;
 
-    constructor(
-        id: string,
-        name: string, user_identification: string, roles: string[], organizationDepartment: string,
-    ) {
+    @Property()
+    public party_name: string;
+
+    @Property()
+    public email: string;
+
+    @Property()
+    public peer_organization: string;
+
+    constructor(id: string, name: string, user_id: string, roles: string[], party_hjid: string,
+                party_name: string, email: string, peer_organization: string) {
         super(id, name, User.name);
-        this.user_identification = user_identification;
-        this.organization_department = organizationDepartment;
+        this.user_id = user_id;
         this.roles = roles;
+        this.party_hjid = party_hjid;
+        this.party_name = party_name;
+        this.email = email;
+        this.peer_organization = peer_organization;
     }
 
     public hasRole(role: string): boolean {

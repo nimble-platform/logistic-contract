@@ -34,31 +34,31 @@ export class IOrderDetails {
         });
     }
     @Property()
-    public eventTimeZoneOffset: string;
+    private _eventTimeZoneOffset: string;
 
     @Property()
-    public bizStep: string;
+    private _bizStep: string;
 
     @Property()
-    public readPoint: string;
+    private _readPoint: string;
 
     @Property()
-    public eventTime: number;
+    private _eventTime: number;
 
     @Property()
-    public bizLocation: string;
+    private _bizLocation: string;
 
     @Property()
-    public manufacturerId: string;
+    private _manufacturerId: string;
 
     @Property()
-    public buyerId: string;
+    private _buyerId: string;
 
     @Property()
-    public itemId: string;
+    private _itemId: string;
 
     @Property()
-    public currentCustodian: string;
+    private _currentCustodian: string;
 
     constructor(
         eventTimeZoneOffset: string,
@@ -71,15 +71,86 @@ export class IOrderDetails {
         itemId: string,
         currentCustodian: string,
     ) {
-        this.eventTimeZoneOffset = eventTimeZoneOffset;
-        this.bizStep = bizStep;
-        this.readPoint = readPoint;
-        this.eventTime = eventTime;
-        this.bizLocation = bizLocation;
-        this.buyerId = buyerId;
-        this.manufacturerId = manufacturerId;
-        this.itemId = itemId;
-        this.currentCustodian = currentCustodian;
+        this._eventTimeZoneOffset = eventTimeZoneOffset;
+        this._bizStep = bizStep;
+        this._readPoint = readPoint;
+        this._eventTime = eventTime;
+        this._bizLocation = bizLocation;
+        this._buyerId = buyerId;
+        this._manufacturerId = manufacturerId;
+        this._itemId = itemId;
+        this._currentCustodian = currentCustodian;
     }
 
+    get eventTimeZoneOffset(): string {
+        return this._eventTimeZoneOffset;
+    }
+
+    set eventTimeZoneOffset(value: string) {
+        this._eventTimeZoneOffset = value;
+    }
+
+    get bizStep(): string {
+        return this._bizStep;
+    }
+
+    set bizStep(value: string) {
+        this._bizStep = value;
+    }
+
+    get readPoint(): string {
+        return this._readPoint;
+    }
+
+    set readPoint(value: string) {
+        this._readPoint = value;
+    }
+
+    get eventTime(): number {
+        return this._eventTime;
+    }
+
+    set eventTime(value: number) {
+        this._eventTime = value;
+    }
+
+    get bizLocation(): string {
+        return this._bizLocation;
+    }
+
+    set bizLocation(value: string) {
+        this._bizLocation = value;
+    }
+
+    get manufacturerId(): string {
+        return this._manufacturerId;
+    }
+
+    set manufacturerId(value: string) {
+        this._manufacturerId = value;
+    }
+
+    get buyerId(): string {
+        return this._buyerId;
+    }
+
+    set buyerId(value: string) {
+        this._buyerId = value;
+    }
+
+    get itemId(): string {
+        return this._itemId;
+    }
+
+    set itemId(value: string) {
+        this._itemId = value;
+    }
+
+    get currentCustodian(): string {
+        return this._currentCustodian;
+    }
+
+    set currentCustodian(value: string) {
+        this._currentCustodian = value;
+    }
 }

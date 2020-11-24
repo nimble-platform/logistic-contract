@@ -19,9 +19,6 @@ import { generateId } from '../utils/functions';
 import { BaseContract } from './base';
 import { IOrderDetails } from '../models/assets/orderDetails';
 import { mockOrder } from './mock';
-import {LogisticProcess} from '../models/dto/logisticProcess';
-import {Item} from '../models/assets/item';
-import {Location} from '../models/locations/location';
 
 export class LogisticContract extends BaseContract {
     constructor() {
@@ -67,7 +64,7 @@ export class LogisticContract extends BaseContract {
     @Transaction()
     @Returns('Order')
     public async getOrder(ctx: NimbleLogisticContext, orderId: string): Promise<Order> {
-        const order = await ctx.orderList.get(orderId);
+        const order: Order = await ctx.orderList.get(orderId);
         ctx.setEvent('GET_ORDER', order);
         return order;
     }
@@ -75,7 +72,7 @@ export class LogisticContract extends BaseContract {
     @Transaction()
     @Returns('Order')
     public async deleteOrder(ctx: NimbleLogisticContext, orderId: string): Promise<Order> {
-        const order = await ctx.orderList.get(orderId);
+        const order: Order = await ctx.orderList.get(orderId);
         if ( order !== null ) {
           ctx.orderList.delete(orderId);
           ctx.setEvent('DELETE_ORDER', order);
@@ -87,7 +84,7 @@ export class LogisticContract extends BaseContract {
     @Transaction(false)
     @Returns('boolean')
     public async orderExists(ctx: NimbleLogisticContext, id: string): Promise<boolean> {
-        const order = await ctx.orderList.get(id);
+        const order: Order = await ctx.orderList.get(id);
         return order !== null ? true : false ;
     }
 
