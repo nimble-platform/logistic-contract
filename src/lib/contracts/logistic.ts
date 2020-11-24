@@ -14,13 +14,14 @@ limitations under the License.
 
 import { Param, Returns, Transaction } from 'fabric-contract-api';
 import {  Order } from '../models/assets/order'; // tslint:disable-line:max-line-length
-import {  Item } from '../models/assets/item'; // tslint:disable-line:max-line-length
 import { NimbleLogisticContext } from '../utils/context';
 import { generateId } from '../utils/functions';
 import { BaseContract } from './base';
-import { IOrderDetails } from '../models/config/orderDetails';
-import { Location } from '../models/locations/location';
-import { order, deliveryLocation, originLocation } from './mock';
+import { IOrderDetails } from '../models/assets/orderDetails';
+import { mockOrder } from './mock';
+import {LogisticProcess} from '../models/dto/logisticProcess';
+import {Item} from '../models/assets/item';
+import {Location} from '../models/locations/location';
 
 export class LogisticContract extends BaseContract {
     constructor() {
@@ -29,77 +30,38 @@ export class LogisticContract extends BaseContract {
 
     @Transaction()
     @Returns('Order')
-    public async InitLedger(ctx: NimbleLogisticContext): Promise<Order> {
-        const knownMockItemId: string = 'f28756ce-1ac8-4eac-a3d8-82199f283908';
-
-        const knownManufacturerId: string = '5e9ea4f7-5ad3-4bf1-b993-79cdd6d0e615';
-
-        const knownItemHjid: string = '567218';
-
-        const knownManufacturerPartyId: string = '43471';
-
-        const knownProductName: string = 'aka_new_product';
-
-        const knownrecordTime: number = 1522809211116;
-
-        const knownepcId: string =  'TEST848777';
-
-        const knowncustodian: string =  'AKA_Logistics';
-
-        const item = new Item(
-            knownMockItemId,
-            knownItemHjid,
-            knownManufacturerId,
-            knownProductName,
-            knownManufacturerPartyId,
-        );
-
-        const expectedOrder = new Order(
-            'some id', order, knownrecordTime, [knownepcId], item, deliveryLocation,
-            originLocation, ['handle with care'], knowncustodian,
-        );
-        await ctx.orderList.add(expectedOrder);
-        ctx.setEvent('PLACE_ORDER', expectedOrder);
-        return expectedOrder;
+    public async initLedger(ctx: NimbleLogisticContext): Promise<Order> {
+        await ctx.orderList.add(mockOrder);
+        ctx.setEvent('PLACE_ORDER', mockOrder);
+        return mockOrder;
     }
 
     @Transaction()
     @Returns('Order')
     public async startLogisticProcess(
-        ctx: NimbleLogisticContext, orderDetails: IOrderDetails, epcList: string[],
-        itemIdentifier: Item, deliveryLocation: Location, originLocation: Location, note: string[], custodian: string,
+        ctx: NimbleLogisticContext, logistiProcess: string
     ): Promise<Order> {
         const numOrders = await ctx.orderList.count();
-
         const id = generateId(ctx.stub.getTxID(), 'ORDER_' + numOrders);
-
-        const order = new Order(
-            id, orderDetails,
-            orderDetails.eventTime,
-            epcList,
-            itemIdentifier,
-            deliveryLocation,
-            originLocation,
-            note,
-            custodian,
-        );
-
+        const order: Order = Order.parseJsonObjectToOrderType(id, JSON.parse(logistiProcess));
         await ctx.orderList.add(order);
-
         ctx.setEvent('PLACE_ORDER', order);
-
         return order;
     }
 
     @Transaction()
     @Returns('Order')
-    public async changeTheCustodian(ctx: NimbleLogisticContext, orderId: string, newOrganization: string)
-    : Promise<Order> {
-        const order = await ctx.orderList.get(orderId);
-        order.custodian = newOrganization;
-        await ctx.orderList.update(order);
-        ctx.setEvent('UPDATE_ORDER', order);
-        return order;
+    public async changeTheCustodian(
+        ctx: NimbleLogisticContext, orderId: string, newOrganization: string, newCustodianChangeEvent: string)
+        : Promise<Order> {
+        const order: Order = await ctx.orderList.get(orderId);
+        if (order !== null && order !== undefined) {
+            order.custodian = newOrganization;
+            order.order_details.push(IOrderDetails.parseJsonString(JSON.parse(newCustodianChangeEvent)));
+            await ctx.orderList.update(order);
+            ctx.setEvent('UPDATE_ORDER', order);
+            return order;
+        }
     }
 
     @Transaction()
