@@ -36,7 +36,7 @@ export class IdentityContract extends BaseContract {
 
     @Transaction()
     @Returns('User')
-    public async createNewUser(
+    public async createNewIdenity(
         ctx: NimbleLogisticContext, userDetails: string,
     ): Promise<User> {
         const numUsers = await ctx.userList.count();
@@ -81,12 +81,10 @@ export class IdentityContract extends BaseContract {
         }
     }
 
-    // AssetExists returns true when asset with given ID exists in world state.
     @Transaction(false)
     @Returns('boolean')
     public async userExists(ctx: NimbleLogisticContext, id: string): Promise<boolean> {
         const user: User = await ctx.userList.get(id);
         return user !== null ? true : false ;
     }
-
 }

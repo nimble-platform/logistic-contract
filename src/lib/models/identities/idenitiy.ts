@@ -12,21 +12,29 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-import { Object, Property } from 'fabric-contract-api';
+import { Object as ContractObject, Property } from 'fabric-contract-api';
 import { NetworkName } from '../../../constants';
 import { State } from '../../ledger-api/state';
 
-@Object()
+@ContractObject()
 export class Identity extends State {
     public static generateClass(idenitityType: string): string {
         return NetworkName + '.identity.' + idenitityType;
     }
 
-    @Property()
-    public readonly id: string;
+    @Property('id', 'string')
+    private _id: string;
 
     @Property()
-    public readonly name: string;
+    private _name: string;
+
+    get id(): string {
+        return this._id;
+    }
+
+    get name(): string {
+        return this._name;
+    }
 
     constructor(
         id: string,
@@ -34,7 +42,20 @@ export class Identity extends State {
         idenitityType: string,
      ) {
         super(Identity.generateClass(idenitityType), [id]);
-        this.id = id;
-        this.name = name;
+        this._id = id;
+        this._name = name;
+    }
+
+    public serialize(): Uint8Array {
+        const toSerialize = JSON.parse(State.serialize(this).toString());
+
+        Object.keys(toSerialize).forEach((key) => {
+            if (key.startsWith('_')) {
+                Object.defineProperty(toSerialize, key.slice(1), Object.getOwnPropertyDescriptor(toSerialize, key));
+                delete toSerialize[key];
+            }
+        });
+
+        return State.serialize(toSerialize);
     }
 }
