@@ -19,8 +19,10 @@ import { User } from '../models/identities/user';
 import { NimbleLogisticContext } from '../utils/context';
 
 export class UserList extends StateList<User> {
-    constructor(ctx: NimbleLogisticContext, listName: string, validTypes: Array<IState<User>>) {
-        super(ctx, `${NetworkName}.lists.${listName}`);
+    constructor(
+        ctx: NimbleLogisticContext, listName: string, validTypes: Array<IState<User>>,
+    ) {
+        super(ctx, NetworkName + '.lists.users.' + listName);
         this.use(...validTypes);
     }
 }

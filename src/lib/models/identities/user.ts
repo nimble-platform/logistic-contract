@@ -12,17 +12,13 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 import { Object as ContractObject, Property } from 'fabric-contract-api';
-import { Identity } from './idenitiy';
 import { State } from '../../ledger-api/state';
-import {Party} from './party';
-import {IOrderDetails} from '../assets/orderDetails';
-import {Item} from '../assets/item';
-import {Location} from '../locations/location';
+import {NetworkName} from '../../../constants';
 
 @ContractObject()
-export class User extends Identity {
+export class User extends State {
 
-    public static parseJsonObjectToUserType(id:string, userDetails:any): User{
+    public static parseJsonObjectToUserType(id: string, userDetails: any): User {
         return new User(
             id, userDetails.name, userDetails.user_id,
             userDetails.roles, userDetails.party_hjid,
@@ -31,8 +27,18 @@ export class User extends Identity {
     }
 
     public static getClass() {
-        return Identity.generateClass(User.name);
+        return User.generateClass(User.name);
     }
+
+    public static generateClass(participantType: string): string {
+        return NetworkName + '.users.'  + participantType;
+    }
+
+    @Property('id', 'string')
+    private id: string;
+
+    @Property()
+    private name: string;
 
     @Property()
     public user_id: string;
@@ -54,17 +60,15 @@ export class User extends Identity {
 
     constructor(id: string, name: string, user_id: string, roles: string[], party_hjid: string,
                 party_name: string, email: string, peer_organization: string) {
-        super(id, name, User.name);
+        super(User.generateClass(User.name), [id]);
+        this.id = id;
+        this.name = name;
         this.user_id = user_id;
         this.roles = roles;
         this.party_hjid = party_hjid;
         this.party_name = party_name;
         this.email = email;
         this.peer_organization = peer_organization;
-    }
-
-    public hasRole(role: string): boolean {
-        return this.roles.includes(role);
     }
 
     public serialize(): Buffer {
@@ -78,5 +82,9 @@ export class User extends Identity {
         });
 
         return Buffer.from(State.serialize(toSerialize));
+    }
+
+    public hasRole(role: string): boolean {
+        return this.roles.includes(role);
     }
 }
