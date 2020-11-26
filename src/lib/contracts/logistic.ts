@@ -18,7 +18,7 @@ import { NimbleLogisticContext } from '../utils/context';
 import { generateId } from '../utils/functions';
 import { BaseContract } from './base';
 import { IOrderDetails } from '../models/assets/orderDetails';
-import { mockOrder } from './mock';
+import {mockOrder, mockUser} from './mock';
 
 export class LogisticContract extends BaseContract {
     constructor() {
@@ -29,7 +29,9 @@ export class LogisticContract extends BaseContract {
     @Returns('Order')
     public async initLedger(ctx: NimbleLogisticContext): Promise<Order> {
         await ctx.orderList.add(mockOrder);
+        await ctx.userList.add(mockUser);
         ctx.setEvent('PLACE_ORDER', mockOrder);
+        ctx.setEvent('ADD_USER', mockUser);
         return mockOrder;
     }
 

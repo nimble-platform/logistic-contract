@@ -87,4 +87,18 @@ export class IdentityContract extends BaseContract {
         const user: User = await ctx.userList.get(id);
         return user !== null ? true : false ;
     }
+
+    @Transaction(false)
+    @Returns('boolean')
+    public async retrievesUserByEmail(ctx: NimbleLogisticContext, email: string): Promise<User> {
+        const user: User[] = await ctx.userList.query({
+            selector: {email},
+        });
+
+        if (user.length > 0) {
+            return user[0];
+        }
+
+        throw new Error(`Cannot get user. No user exists for email ${email}`);
+    }
 }
