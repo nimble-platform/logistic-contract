@@ -111,11 +111,9 @@ export class LogisticContract extends BaseContract {
         const user: User[] = await ctx.userList.query({
             selector: {email},
         });
-
         if (user.length > 0) {
             return user[0];
         }
-
         throw new Error(`Cannot get user. No user exists for email ${email}`);
     }
 
