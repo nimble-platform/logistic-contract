@@ -20,6 +20,7 @@ import { BaseContract } from './base';
 import { IOrderDetails } from '../models/assets/orderDetails';
 import {mockOrder, mockUser} from './mock';
 import {User} from '../models/identities/user';
+import {Roles} from '../../constants';
 
 export class IdentityContract extends BaseContract {
     constructor() {
@@ -88,7 +89,7 @@ export class IdentityContract extends BaseContract {
         return user !== null ? true : false ;
     }
 
-    @Transaction(false)
+    @Transaction()
     @Returns('boolean')
     public async retrievesUserByEmail(ctx: NimbleLogisticContext, email: string): Promise<User> {
         const user: User[] = await ctx.userList.query({
