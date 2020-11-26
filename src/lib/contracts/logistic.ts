@@ -19,6 +19,8 @@ import { generateId } from '../utils/functions';
 import { BaseContract } from './base';
 import { IOrderDetails } from '../models/assets/orderDetails';
 import {mockOrder, mockUser} from './mock';
+import {User} from '../models/identities/user';
+import {Roles} from '../../constants';
 
 export class LogisticContract extends BaseContract {
     constructor() {
@@ -38,8 +40,11 @@ export class LogisticContract extends BaseContract {
     @Transaction()
     @Returns('Order')
     public async startLogisticProcess(
-        ctx: NimbleLogisticContext, logistiProcess: string
-    ): Promise<Order> {
+        ctx: NimbleLogisticContext, logistiProcess: string, userEmail: string): Promise<Order> {
+        const user: User = await this.retrievesUserByEmail(ctx, userEmail);
+        if (!user.hasRole(Roles.PURCHASER)) {
+            throw new Error(`Only callers with role ${Roles.PUBLISHER} can get publish orders`);
+        }
         const numOrders = await ctx.orderList.count();
         const id = generateId(ctx.stub.getTxID(), 'ORDER_' + numOrders);
         const order: Order = Order.parseJsonObjectToOrderType(id, JSON.parse(logistiProcess));
@@ -51,35 +56,47 @@ export class LogisticContract extends BaseContract {
     @Transaction()
     @Returns('Order')
     public async changeTheCustodian(
-        ctx: NimbleLogisticContext, orderId: string, newOrganization: string, newCustodianChangeEvent: string)
+        ctx: NimbleLogisticContext, orderId: string, newOrganization: string, newCustodianChangeEvent: string,
+        userEmail: string)
         : Promise<Order> {
         const order: Order = await ctx.orderList.get(orderId);
-        if (order !== null && order !== undefined) {
-            order.custodian = newOrganization;
-            order.order_details.push(IOrderDetails.parseJsonString(JSON.parse(newCustodianChangeEvent)));
-            await ctx.orderList.update(order);
-            ctx.setEvent('UPDATE_ORDER', order);
-            return order;
+        const user: User = await this.retrievesUserByEmail(ctx, userEmail);
+        if (!order.involed_parties.includes(user.party_hjid) ||
+            !(user.hasRole(Roles.PUBLISHER) || user.hasRole(Roles.PURCHASER))) {
+            throw new Error(`Only callers provided in initial contract can change the custodian of an orders`);
         }
+        order.custodian = newOrganization;
+        order.order_details.push(IOrderDetails.parseJsonString(JSON.parse(newCustodianChangeEvent)));
+        await ctx.orderList.update(order);
+        ctx.setEvent('UPDATE_ORDER', order);
+        return order;
     }
 
     @Transaction()
     @Returns('Order')
-    public async getOrder(ctx: NimbleLogisticContext, orderId: string): Promise<Order> {
+    public async getOrder(ctx: NimbleLogisticContext, orderId: string, userEmail: string): Promise<Order> {
         const order: Order = await ctx.orderList.get(orderId);
+        const user: User = await this.retrievesUserByEmail(ctx, userEmail);
+        if (!order.involed_parties.includes(user.party_hjid) ||
+            !(user.hasRole(Roles.PUBLISHER) || user.hasRole(Roles.PURCHASER))) {
+            throw new Error(`Only callers provided in initial contract can retrieve an order details`);
+        }
         ctx.setEvent('GET_ORDER', order);
         return order;
     }
 
     @Transaction()
     @Returns('Order')
-    public async deleteOrder(ctx: NimbleLogisticContext, orderId: string): Promise<Order> {
+    public async deleteOrder(ctx: NimbleLogisticContext, orderId: string, userEmail: string): Promise<Order> {
         const order: Order = await ctx.orderList.get(orderId);
-        if ( order !== null ) {
-          ctx.orderList.delete(orderId);
-          ctx.setEvent('DELETE_ORDER', order);
-          return order;
+        const user: User = await this.retrievesUserByEmail(ctx, userEmail);
+        if (!order.involed_parties.includes(user.party_hjid) ||
+            !(user.hasRole(Roles.PUBLISHER) || user.hasRole(Roles.PURCHASER) || user.hasRole(Roles.PLATFORM_MANAGER))) {
+            throw new Error(`Only callers provided in initial contract can retrieve an order details`);
         }
+        ctx.orderList.delete(orderId);
+        ctx.setEvent('DELETE_ORDER', order);
+        return order;
     }
 
      // AssetExists returns true when asset with given ID exists in world state.
@@ -88,6 +105,18 @@ export class LogisticContract extends BaseContract {
     public async orderExists(ctx: NimbleLogisticContext, id: string): Promise<boolean> {
         const order: Order = await ctx.orderList.get(id);
         return order !== null ? true : false ;
+    }
+
+    public async retrievesUserByEmail(ctx: NimbleLogisticContext, email: string): Promise<User> {
+        const user: User[] = await ctx.userList.query({
+            selector: {email},
+        });
+
+        if (user.length > 0) {
+            return user[0];
+        }
+
+        throw new Error(`Cannot get user. No user exists for email ${email}`);
     }
 
 }
