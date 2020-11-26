@@ -66,11 +66,11 @@ const orderDetails: IOrderDetails[]  = [
 ];
 
 export const mockOrder: Order = new Order(
-    'some id4', orderDetails, knownRecordTime, [knownEpcId], item, deliveryLocation,
-    originLocation, ['handle with care'], knownCustodian,
+    'some id26', orderDetails, knownRecordTime, [knownEpcId], item, deliveryLocation,
+    originLocation, ['handle with care'], knownCustodian, ['41915', '41912', '41915', '41919'],
 );
 
 export const  mockUser: User = new User(
-    '1234', 'perera Ayesh', 'nimble-id', ['Admin', 'Nimble-User'],
-    'nimble-party-id', 'Ayesh logistics', 'akayeshmantha@gmail.com', 'nimble',
+    'some id11', 'perera Ayesh', 'nimble-id', ['platform_manager'],
+    '41915', 'Ayesh logistics', 'akayeshmantha@gmail.com', 'nimble',
 );

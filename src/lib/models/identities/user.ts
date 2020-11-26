@@ -35,10 +35,10 @@ export class User extends State {
     }
 
     @Property('id', 'string')
-    private id: string;
+    public id: string;
 
     @Property()
-    private name: string;
+    public name: string;
 
     @Property()
     public user_id: string;

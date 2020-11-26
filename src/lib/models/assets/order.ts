@@ -22,7 +22,7 @@ import { Location } from '../locations/location';
 
 @Object()
 export class Order extends Asset {
-    public static parseJsonObjectToOrderType(id:string, logisticProcess:any): Order{
+    public static parseJsonObjectToOrderType(id: string, logisticProcess: any): Order {
         return new Order(
             id, [IOrderDetails.parseJsonString(logisticProcess.orderDetails)],
             logisticProcess.eventTime,
@@ -32,6 +32,7 @@ export class Order extends Asset {
             Location.parseJsonStringToLocationType(logisticProcess.originLocation),
             logisticProcess.note,
             logisticProcess.custodian,
+            logisticProcess.involed_parties,
         );
     }
     public static getClass() {
@@ -62,11 +63,15 @@ export class Order extends Asset {
     @Property()
     private _custodian: string;
 
+    @Property('_involed_parties', 'string[]')
+    private _involed_parties: string[];
+
+
     constructor(
         id: string,
         order_details: IOrderDetails[], record_time: number, epc_list: string[], item_idetifier: Item,
         delivery_location_identifier: Location, origin_location_identifier: Location, note: string[],
-        custodian: string,
+        custodian: string, involed_parties: string[],
     ) {
         super(id, Order.name);
         this._order_details = order_details;
@@ -77,6 +82,7 @@ export class Order extends Asset {
         this._origin_location_identifier = origin_location_identifier;
         this._note = note;
         this._custodian = custodian;
+        this.involed_parties = involed_parties;
     }
 
     get order_details(): IOrderDetails[] {return this._order_details;}
@@ -106,4 +112,8 @@ export class Order extends Asset {
     get custodian(): string {return this._custodian;}
 
     set custodian(value: string) {this._custodian = value;}
+
+    get involed_parties(): string[] {return this._involed_parties;}
+
+    set involed_parties(value: string[]) {this._involed_parties = value;}
 }
