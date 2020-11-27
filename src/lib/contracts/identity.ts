@@ -17,7 +17,6 @@ import {  Order } from '../models/assets/order'; // tslint:disable-line:max-line
 import { NimbleLogisticContext } from '../utils/context';
 import { generateId } from '../utils/functions';
 import { BaseContract } from './base';
-import { IOrderDetails } from '../models/assets/orderDetails';
 import {mockOrder, mockUser} from './mock';
 import {User} from '../models/identities/user';
 import {Roles} from '../../constants';
@@ -37,23 +36,32 @@ export class IdentityContract extends BaseContract {
 
     @Transaction()
     @Returns('User')
-    public async createNewIdenity(
+    public async createNewIdentity(
         ctx: NimbleLogisticContext, userDetails: string,
     ): Promise<User> {
         const numUsers = await ctx.userList.count();
         const id = generateId(ctx.stub.getTxID(), 'USERS_' + numUsers);
         const user: User = User.parseJsonObjectToUserType(id, JSON.parse(userDetails));
-        await ctx.userList.add(user);
-        ctx.setEvent('ADD_NEW_USER', user);
-        return user;
+
+        if (!await this.checkIdentityExistence(ctx, user)) {
+            await ctx.userList.add(user);
+            ctx.setEvent('ADD_NEW_USER', user);
+            return user;
+        }
     }
 
     @Transaction()
     @Returns('User')
-    public async changeTheOrganizationofUser(
-        ctx: NimbleLogisticContext, userId: string, organizationId: string, orgnaizationName: string)
+    public async changeTheOrganizationOfIdentity(
+        ctx: NimbleLogisticContext, userId: string, organizationId: string, orgnaizationName: string, userEmail: string)
         : Promise<User> {
         const user: User = await ctx.userList.get(userId);
+        const cuser: User = await this.retrievesIdentityByEmail(ctx, userEmail);
+
+        if (user.email.toString() !== userEmail && cuser.roles.includes(Roles.PLATFORM_MANAGER)) {
+            throw new Error('User can be updated by the user or platform admins');
+        }
+
         if (user !== null && user !== undefined) {
             user.party_hjid = organizationId;
             user.party_name = orgnaizationName;
@@ -65,7 +73,7 @@ export class IdentityContract extends BaseContract {
 
     @Transaction()
     @Returns('User')
-    public async getUser(ctx: NimbleLogisticContext, userId: string): Promise<User> {
+    public async getIdentity(ctx: NimbleLogisticContext, userId: string): Promise<User> {
         const user: User = await ctx.userList.get(userId);
         ctx.setEvent('GET_USER', user);
         return user;
@@ -73,10 +81,10 @@ export class IdentityContract extends BaseContract {
 
     @Transaction()
     @Returns('User')
-    public async deleteUser(ctx: NimbleLogisticContext, userId: string): Promise<User> {
+    public async deleteIdentity(ctx: NimbleLogisticContext, userId: string): Promise<User> {
         const user: User = await ctx.userList.get(userId);
         if ( user !== null ) {
-            ctx.orderList.delete(userId);
+            ctx.userList.delete(userId);
             ctx.setEvent('DELETE_ORDER', user);
             return user;
         }
@@ -90,14 +98,37 @@ export class IdentityContract extends BaseContract {
     }
 
     @Transaction()
-    @Returns('boolean')
-    public async retrievesUserByEmail(ctx: NimbleLogisticContext, email: string): Promise<User> {
+    @Returns('User')
+    public async retrievesIdentityByEmail(ctx: NimbleLogisticContext, email: string): Promise<User> {
         const user: User[] = await ctx.userList.query({
             selector: {email},
         });
+
         if (user.length > 0) {
             return user[0];
         }
+
         throw new Error(`Cannot get user. No user exists for email ${email}`);
+    }
+
+    @Transaction()
+    @Returns('boolean')
+    public async checkIdentityExistence(ctx: NimbleLogisticContext, cuser: User): Promise<boolean> {
+        const user: User[] = await ctx.userList.query({
+            selector: { email : cuser.email},
+        });
+
+        if (user.length > 0) {
+            throw new Error(`User already registered to the platform with ${cuser.email}`);
+        }
+
+        const nuser: User[] = await ctx.userList.query({
+            selector: { user_id : cuser.email},
+        });
+
+        if (nuser.length > 0) {
+            throw new Error(`User already registered to the platform with nimble_user_id ${cuser.user_id}`);
+        }
+        return false;
     }
 }
