@@ -33,7 +33,7 @@ export class LogisticContract extends BaseContract {
         await ctx.orderList.add(mockOrder);
         await ctx.userList.add(mockUser);
         ctx.setEvent('PLACE_ORDER', mockOrder);
-        ctx.setEvent('ADD_USER', mockUser);
+        ctx.setEvent('ADD_INITIAL_USER', mockUser);
         return mockOrder;
     }
 
@@ -42,9 +42,11 @@ export class LogisticContract extends BaseContract {
     public async startLogisticProcess(
         ctx: NimbleLogisticContext, logistiProcess: string, userEmail: string): Promise<Order> {
         const user: User = await this.retrievesUserByEmail(ctx, userEmail);
-        if (!user.hasRole(Roles.PURCHASER)) {
+
+        if (!user.hasRole(Roles.PUBLISHER)) {
             throw new Error(`Only callers with role ${Roles.PUBLISHER} can get publish orders`);
         }
+
         const numOrders = await ctx.orderList.count();
         const id = generateId(ctx.stub.getTxID(), 'ORDER_' + numOrders);
         const order: Order = Order.parseJsonObjectToOrderType(id, JSON.parse(logistiProcess));
@@ -61,10 +63,12 @@ export class LogisticContract extends BaseContract {
         : Promise<Order> {
         const order: Order = await ctx.orderList.get(orderId);
         const user: User = await this.retrievesUserByEmail(ctx, userEmail);
-        if (!order.involed_parties.includes(user.party_hjid) ||
+
+        if (!order.involed_parties.includes(user.party_hjid.toString()) ||
             !(user.hasRole(Roles.PUBLISHER) || user.hasRole(Roles.PURCHASER))) {
             throw new Error(`Only callers provided in initial contract can change the custodian of an orders`);
         }
+
         order.custodian = newOrganization;
         order.order_details.push(IOrderDetails.parseJsonString(JSON.parse(newCustodianChangeEvent)));
         await ctx.orderList.update(order);
@@ -77,10 +81,12 @@ export class LogisticContract extends BaseContract {
     public async getOrder(ctx: NimbleLogisticContext, orderId: string, userEmail: string): Promise<Order> {
         const order: Order = await ctx.orderList.get(orderId);
         const user: User = await this.retrievesUserByEmail(ctx, userEmail);
-        if (!order.involed_parties.includes(user.party_hjid) ||
+
+        if (!order.involed_parties.includes(user.party_hjid.toString()) ||
             !(user.hasRole(Roles.PUBLISHER) || user.hasRole(Roles.PURCHASER))) {
             throw new Error(`Only callers provided in initial contract can retrieve an order details`);
         }
+
         ctx.setEvent('GET_ORDER', order);
         return order;
     }
@@ -90,10 +96,12 @@ export class LogisticContract extends BaseContract {
     public async deleteOrder(ctx: NimbleLogisticContext, orderId: string, userEmail: string): Promise<Order> {
         const order: Order = await ctx.orderList.get(orderId);
         const user: User = await this.retrievesUserByEmail(ctx, userEmail);
-        if (!order.involed_parties.includes(user.party_hjid) ||
+
+        if (!order.involed_parties.includes(user.party_hjid.toString()) ||
             !(user.hasRole(Roles.PUBLISHER) || user.hasRole(Roles.PURCHASER) || user.hasRole(Roles.PLATFORM_MANAGER))) {
             throw new Error(`Only callers provided in initial contract can retrieve an order details`);
         }
+
         ctx.orderList.delete(orderId);
         ctx.setEvent('DELETE_ORDER', order);
         return order;
@@ -104,16 +112,18 @@ export class LogisticContract extends BaseContract {
     @Returns('boolean')
     public async orderExists(ctx: NimbleLogisticContext, id: string): Promise<boolean> {
         const order: Order = await ctx.orderList.get(id);
-        return order !== null ? true : false ;
+        return order !== null ;
     }
 
     public async retrievesUserByEmail(ctx: NimbleLogisticContext, email: string): Promise<User> {
         const user: User[] = await ctx.userList.query({
             selector: {email},
         });
+
         if (user.length > 0) {
             return user[0];
         }
+
         throw new Error(`Cannot get user. No user exists for email ${email}`);
     }
 
