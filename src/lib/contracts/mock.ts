@@ -66,11 +66,11 @@ const orderDetails: IOrderDetails[]  = [
 ];
 
 export const mockOrder: Order = new Order(
-    'some id26', orderDetails, knownRecordTime, [knownEpcId], item, deliveryLocation,
-    originLocation, ['handle with care'], knownCustodian, ['41915', '41912', '41915', '41919'],
+    'some id43', orderDetails, knownRecordTime, [knownEpcId], item, deliveryLocation,
+    originLocation, ['handle with care'], knownCustodian, ['41920', '41921', '41922', '41923'],
 );
 
 export const  mockUser: User = new User(
-    'some id11', 'perera Ayesh', 'nimble-id', ['platform_manager'],
-    '41915', 'Ayesh logistics', 'akayeshmantha@gmail.com', 'nimble',
+    'some id35', 'perera Ayesh', 'nimble-id', ['platform_manager', 'purchaser', 'publisher'],
+    '41922', 'Ayesh logistics', 'akayeshmantha@gmail.com', 'nimble',
 );

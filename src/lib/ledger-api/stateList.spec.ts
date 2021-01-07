@@ -162,7 +162,7 @@ describe ('#StateList', () => {
 
             (stateList as any).supportedClasses = expectedSupportedClasses;
 
-            const history = await stateList.getHistory('my key');
+            const history =  stateList.getHistory('my key');
 
             splitKeyStub.should.have.been.calledOnceWithExactly('my key');
             (mockContext.stub as sinon.SinonStubbedInstance<ChaincodeStub>).createCompositeKey
